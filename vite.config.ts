@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  envPrefix: ['APP_'],
+  envPrefix: [],
 
   server: {
     port: 3000,
