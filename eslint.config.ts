@@ -81,6 +81,8 @@ export default defineConfig([
 
   {
     rules: {
+      'react/no-unescaped-entities': 'off',
+
       'react/react-in-jsx-scope': 'off',
 
       'react/jsx-curly-brace-presence': [
