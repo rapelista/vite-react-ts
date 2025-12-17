@@ -8,14 +8,13 @@ import {
 interface SelectProps extends React.ComponentProps<typeof ShadCNSelect> {}
 
 export function Select(props: SelectProps) {
-  const field = useFieldContext();
-  const value = field.state.value ? String(field.state.value) : undefined;
+  const field = useFieldContext<string>();
 
   return (
     <ShadCNSelect
       {...props}
       name={field.name}
-      value={value}
+      value={field.state.value}
       onValueChange={field.handleChange}
     />
   );
