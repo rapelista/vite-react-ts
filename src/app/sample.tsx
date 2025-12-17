@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useAppForm } from '~/components/form';
 import { Card, CardContent } from '~/components/ui/card';
 import { FieldGroup } from '~/components/ui/field';
-import { SelectContent, SelectItem, SelectValue } from '~/components/ui/select';
+import { SelectValue } from '~/components/ui/select';
 
 export const Route = createFileRoute('/sample')({
   component: RouteComponent,
@@ -14,7 +14,11 @@ function RouteComponent() {
     defaultValues: {
       text: '',
       textarea: '',
-      select: '1',
+
+      select: {
+        string: '1',
+        number: 1,
+      },
     },
   });
 
@@ -40,7 +44,7 @@ function RouteComponent() {
                 )}
               </form.AppField>
 
-              <form.AppField name="select">
+              <form.AppField name="select.string">
                 {(field) => (
                   <field.Field label="Select">
                     <field.Select>
@@ -48,14 +52,43 @@ function RouteComponent() {
                         <SelectValue placeholder="Select Here" />
                       </field.SelectTrigger>
 
-                      <SelectContent>
-                        <SelectItem value="1">Option 1</SelectItem>
-                        <SelectItem value="2">Option 2</SelectItem>
-                      </SelectContent>
+                      <field.SelectContent items={[1, 2, 3]} />
                     </field.Select>
                   </field.Field>
                 )}
               </form.AppField>
+
+              <form.AppField name="select.number">
+                {(field) => (
+                  <field.Field label="Select with Number Value">
+                    <field.Select>
+                      <field.SelectTrigger>
+                        <SelectValue placeholder="Select Here" />
+                      </field.SelectTrigger>
+
+                      <field.SelectContent
+                        items={[
+                          {
+                            id: 1,
+                            name: 'Akmal',
+                          },
+                          {
+                            id: 2,
+                            name: 'Salsa',
+                          },
+                        ].map((item) => ({
+                          value: item.id,
+                          label: item.name,
+                        }))}
+                      />
+                    </field.Select>
+                  </field.Field>
+                )}
+              </form.AppField>
+
+              <form.AppForm>
+                <form.Preview />
+              </form.AppForm>
             </FieldGroup>
           </form>
         </CardContent>
