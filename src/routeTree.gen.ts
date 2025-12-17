@@ -9,55 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './app/__root'
-import { Route as SampleRouteImport } from './app/sample'
 import { Route as IndexRouteImport } from './app/index'
+import { Route as SampleIndexRouteImport } from './app/sample/index'
 
-const SampleRoute = SampleRouteImport.update({
-  id: '/sample',
-  path: '/sample',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SampleIndexRoute = SampleIndexRouteImport.update({
+  id: '/sample/',
+  path: '/sample/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/sample': typeof SampleRoute
+  '/sample': typeof SampleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/sample': typeof SampleRoute
+  '/sample': typeof SampleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/sample': typeof SampleRoute
+  '/sample/': typeof SampleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/sample'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/sample'
-  id: '__root__' | '/' | '/sample'
+  id: '__root__' | '/' | '/sample/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  SampleRoute: typeof SampleRoute
+  SampleIndexRoute: typeof SampleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sample': {
-      id: '/sample'
-      path: '/sample'
-      fullPath: '/sample'
-      preLoaderRoute: typeof SampleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sample/': {
+      id: '/sample/'
+      path: '/sample'
+      fullPath: '/sample'
+      preLoaderRoute: typeof SampleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  SampleRoute: SampleRoute,
+  SampleIndexRoute: SampleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

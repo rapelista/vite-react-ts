@@ -9,20 +9,22 @@ import {
 
 type SelectValue = string | number | null | undefined;
 
-interface SelectProps extends React.ComponentProps<typeof ShadCNSelect> {}
+interface SelectProps extends React.ComponentProps<typeof ShadCNSelect> {
+  type?: 'string' | 'number';
+}
 
-export function Select(props: SelectProps) {
+export function Select({ type = 'string', ...props }: SelectProps) {
   const field = useFieldContext<SelectValue>();
 
   const value =
     field.state.value !== null && field.state.value !== undefined
-      ? typeof field.state.value === 'number'
+      ? type === 'number'
         ? field.state.value.toString()
-        : field.state.value
+        : (field.state.value as string)
       : '';
 
   const handleValueChange = (value: string) => {
-    if (typeof field.state.value === 'number') {
+    if (type === 'number') {
       const numberValue = Number(value);
 
       if (!isNaN(numberValue)) {

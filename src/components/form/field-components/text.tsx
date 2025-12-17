@@ -2,9 +2,9 @@ import { useFieldContext } from '~/components/form';
 import { checkIsInvalid } from '~/components/form/helper';
 import { Input } from '~/components/ui/input';
 
-interface TextFieldProps extends React.ComponentProps<typeof Input> {}
+interface TextProps extends React.ComponentProps<typeof Input> {}
 
-export function TextField(props: TextFieldProps) {
+export function Text(props: TextProps) {
   const field = useFieldContext<string>();
   const isInvalid = checkIsInvalid(field);
 
@@ -15,7 +15,7 @@ export function TextField(props: TextFieldProps) {
       id={field.name}
       name={field.name}
       type="text"
-      value={field.state.value}
+      value={field.state.value || ''}
       onBlur={field.handleBlur}
       onChange={(e) => field.handleChange(e.target.value)}
     />

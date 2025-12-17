@@ -1,24 +1,45 @@
+import { revalidateLogic } from '@tanstack/react-form';
 import { createFileRoute } from '@tanstack/react-router';
+import { Save } from 'lucide-react';
+import * as z from 'zod';
 
 import { useAppForm } from '~/components/form';
+import { Button } from '~/components/ui/button';
 import { Card, CardContent } from '~/components/ui/card';
-import { FieldGroup } from '~/components/ui/field';
+import { Field, FieldGroup } from '~/components/ui/field';
 import { SelectValue } from '~/components/ui/select';
+import { worker } from '~/mock/worker';
 
-export const Route = createFileRoute('/sample')({
+const schema = z.object({
+  text: z.string('Text is required').nonempty('Text is required'),
+  textarea: z.string('Text is required').nonempty('Textarea is required'),
+  select: z.object({
+    string: z.string('Not a string'),
+    number: z.number('Select is required'),
+  }),
+});
+
+export const Route = createFileRoute('/sample/')({
   component: RouteComponent,
+  beforeLoad: async () => {
+    await worker.start();
+  },
 });
 
 function RouteComponent() {
   const form = useAppForm({
     defaultValues: {
-      text: '',
-      textarea: '',
+      select: {},
+    } as z.infer<typeof schema>,
 
-      select: {
-        string: '1',
-        number: 1,
-      },
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: schema,
+    },
+
+    onSubmit: ({ value }) => {
+      // eslint-disable-next-line no-console
+      console.log(value);
     },
   });
 
@@ -26,12 +47,17 @@ function RouteComponent() {
     <div className="container mx-auto max-w-xl px-4 py-12">
       <Card>
         <CardContent>
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
             <FieldGroup>
               <form.AppField name="text">
                 {(field) => (
                   <field.Field label="Text">
-                    <field.TextField placeholder="Input text here&hellip;" />
+                    <field.Text placeholder="Input text here&hellip;" />
                   </field.Field>
                 )}
               </form.AppField>
@@ -61,7 +87,7 @@ function RouteComponent() {
               <form.AppField name="select.number">
                 {(field) => (
                   <field.Field label="Select with Number Value">
-                    <field.Select>
+                    <field.Select type="number">
                       <field.SelectTrigger>
                         <SelectValue placeholder="Select Here" />
                       </field.SelectTrigger>
@@ -86,9 +112,18 @@ function RouteComponent() {
                 )}
               </form.AppField>
 
-              <form.AppForm>
-                <form.Preview />
-              </form.AppForm>
+              <Field>
+                <form.AppForm>
+                  <form.Preview />
+                </form.AppForm>
+              </Field>
+
+              <Field orientation="horizontal">
+                <Button>
+                  <Save />
+                  Save
+                </Button>
+              </Field>
             </FieldGroup>
           </form>
         </CardContent>
